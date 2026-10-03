@@ -1030,6 +1030,159 @@
           padding: 24px;
         }
       }
+
+      /* ================= RESPONSIVE CHECKOUT + PAYMENT ================= */
+      @media (max-width: 550px) {
+        .modal {
+          padding: 10px;
+          align-items: flex-start;
+        }
+
+        .checkout {
+          width: 100%;
+          max-height: calc(100vh - 20px);
+          max-height: calc(100dvh - 20px);
+          margin: 10px 0;
+          padding: 22px 16px;
+          border-radius: 14px;
+        }
+
+        .checkout h2 {
+          font-size: 26px;
+          line-height: 1.15;
+          padding-right: 35px;
+        }
+
+        .order-product {
+          gap: 12px;
+          padding: 12px;
+        }
+
+        .order-product img {
+          width: 58px;
+          height: 58px;
+        }
+
+        .payment-box {
+          padding: 16px 12px;
+        }
+
+        .payment-box h3 {
+          font-size: 20px;
+        }
+
+        .payment-box p {
+          font-size: 12px;
+          line-height: 1.45;
+        }
+
+        .upi-id {
+          overflow-wrap: anywhere;
+          word-break: break-word;
+          font-size: 12px;
+        }
+
+        .upi-id strong {
+          font-size: 12px;
+        }
+
+        .qr {
+          width: min(190px, 70vw);
+          height: min(190px, 70vw);
+        }
+
+        .full-btn {
+          min-height: 52px;
+          width: 100%;
+        }
+
+        .total {
+          align-items: center;
+          gap: 12px;
+          font-size: 18px;
+        }
+
+        .total strong {
+          text-align: right;
+        }
+
+        .close-btn {
+          right: 12px;
+          top: 12px;
+        }
+      }
+
+      /* iOS UPI app picker */
+      .upi-app-chooser {
+        position: fixed;
+        inset: 0;
+        z-index: 10000;
+        display: none;
+        align-items: flex-end;
+        justify-content: center;
+        padding: 12px;
+        background: rgba(0, 0, 0, 0.72);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+      }
+
+      .upi-app-chooser.active {
+        display: flex;
+      }
+
+      .upi-app-chooser-card {
+        width: min(520px, 100%);
+        max-height: 90dvh;
+        overflow-y: auto;
+        padding: 22px 16px calc(18px + env(safe-area-inset-bottom));
+        border: 1px solid #333;
+        border-radius: 18px 18px 12px 12px;
+        background: #111;
+        box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.45);
+      }
+
+      .upi-app-chooser-card h3 {
+        margin: 0 0 7px;
+        font-size: 22px;
+      }
+
+      .upi-app-chooser-card p {
+        margin: 0 0 14px;
+        color: #999;
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      .upi-app-option {
+        width: 100%;
+        min-height: 52px;
+        margin-top: 9px;
+        padding: 13px 15px;
+        border: 1px solid #333;
+        border-radius: 9px;
+        background: #191919;
+        color: #fff;
+        font: inherit;
+        font-weight: 700;
+        text-align: left;
+        cursor: pointer;
+      }
+
+      .upi-app-option:active {
+        transform: scale(0.99);
+        border-color: #d6a532;
+      }
+
+      .upi-app-cancel {
+        width: 100%;
+        min-height: 46px;
+        margin-top: 10px;
+        border: 0;
+        background: transparent;
+        color: #999;
+        font: inherit;
+        cursor: pointer;
+      }
     </style>
   </head>
 
@@ -1078,6 +1231,7 @@
 
           <strong id="heroPrice">
             <span class="mrp-price">₹999</span>
+
             <span class="sale-price">₹399</span>
           </strong>
 
@@ -1439,6 +1593,7 @@
 
           <strong id="checkoutTotalPrice">
             <span class="mrp-price">₹999</span>
+
             <span class="sale-price">₹399</span>
           </strong>
         </div>
@@ -1446,20 +1601,6 @@
         <!-- ================= UPI ================= -->
 
         <div class="payment-box">
-          <h3>Pay Directly With UPI</h3>
-
-          <p>
-            Tap PAY NOW to open your UPI payment app with the amount pre-filled.
-          </p>
-
-          <!-- CHANGE YOUR UPI ID -->
-
-          <div class="upi-id">
-            UPI ID:
-
-            <strong> BHARATPE2K0L0S756Q68218@unitype </strong>
-          </div>
-
           <button class="btn btn-primary full-btn" onclick="payNow()">
             PAY NOW
           </button>
@@ -1494,11 +1635,11 @@
 
           <!-- CHANGE WHATSAPP NUMBER -->
 
-          <a href="https://wa.me/91XXXXXXXXXX" target="\_blank"> WhatsApp </a>
+          <a href="https\://wa.me/91XXXXXXXXXX" target="\\_blank"> WhatsApp </a>
 
           <!-- CHANGE INSTAGRAM -->
 
-          <a href="https://instagram.com/YOUR_USERNAME" target="\_blank">
+          <a href="https\://instagram.com/YOUR_USERNAME" target="\\_blank">
             Instagram
           </a>
 
@@ -1512,209 +1653,407 @@
     </footer>
 
     <script>
-      /* ================= PRODUCT SETTINGS ================= */
 
-      /*
-
-
-
-CHANGE PRICE HERE
+            /* ================= PRODUCT SETTINGS ================= */
 
 
 
-*/
+            /*
 
-      const productPrice = 399;
 
-      const productMRP = 999;
 
-      let quantity = 1;
 
-      /* ================= IMAGE GALLERY ================= */
 
-      const mainImage = document.getElementById("mainImage");
 
-      const thumbnailButtons = document.querySelectorAll(".thumbnail-btn");
 
-      function changeImage(imagePath, clickedButton = null) {
-        if (!mainImage || !imagePath) return;
+      CHANGE PRICE HERE
 
-        mainImage.style.opacity = "0";
 
-        setTimeout(() => {
-          mainImage.src = imagePath;
 
-          mainImage.onload = () => {
-            mainImage.style.opacity = "1";
-          };
 
-          if (mainImage.complete) {
-            mainImage.style.opacity = "1";
+
+
+
+      */
+
+
+
+            const productPrice = 399;
+
+
+
+            const productMRP = 999;
+
+
+
+            let quantity = 1;
+
+
+
+            /* ================= IMAGE GALLERY ================= */
+
+
+
+            const mainImage = document.getElementById("mainImage");
+
+
+
+            const thumbnailButtons = document.querySelectorAll(".thumbnail-btn");
+
+
+
+            function changeImage(imagePath, clickedButton = null) {
+
+              if (!mainImage || !imagePath) return;
+
+
+
+              mainImage.style.opacity = "0";
+
+
+
+              setTimeout(() => {
+
+                mainImage.src = imagePath;
+
+
+
+                mainImage.onload = () => {
+
+                  mainImage.style.opacity = "1";
+
+                };
+
+
+
+                if (mainImage.complete) {
+
+                  mainImage.style.opacity = "1";
+
+                }
+
+              }, 120);
+
+
+
+              thumbnailButtons.forEach((button) => {
+
+                button.classList.remove("active");
+
+              });
+
+
+
+              if (clickedButton) {
+
+                clickedButton.classList.add("active");
+
+              }
+
+            }
+
+
+
+            thumbnailButtons.forEach((button) => {
+
+              button.addEventListener("click", () => {
+
+                const imagePath = button.dataset.image;
+
+
+
+                if (!imagePath) return;
+
+
+
+                changeImage(imagePath, button);
+
+              });
+
+            });
+
+
+
+            if (mainImage) {
+
+              mainImage.style.transition = "opacity 0.18s ease";
+
+            }
+
+
+
+            /* ================= CHECKOUT ================= */
+
+
+
+            function openCheckout() {
+
+              document.getElementById("checkoutModal").classList.add("active");
+
+
+
+              document.body.style.overflow = "hidden";
+
+
+
+              updateTotal();
+
+            }
+
+
+
+            function closeCheckout() {
+
+              document.getElementById("checkoutModal").classList.remove("active");
+
+
+
+              document.body.style.overflow = "auto";
+
+            }
+
+
+
+            /* ================= QUANTITY ================= */
+
+
+
+            function changeQuantity(amount) {
+
+              quantity += amount;
+
+
+
+              if (quantity < 1) {
+
+                quantity = 1;
+
+              }
+
+
+
+              if (quantity > 10) {
+
+                quantity = 10;
+
+              }
+
+
+
+              document.getElementById("quantity").textContent = quantity;
+
+
+
+              updateTotal();
+
+            }
+
+
+
+            function updateTotal() {
+
+              const mrpTotal = productMRP * quantity;
+
+              const saleTotal = productPrice * quantity;
+
+              const totalPriceElement = document.getElementById("checkoutTotalPrice");
+
+
+
+              if (totalPriceElement) {
+
+                totalPriceElement.innerHTML = `
+
+                <span class="mrp-price">₹${mrpTotal.toLocaleString("en-IN")}</span>
+
+                <span class="sale-price">₹${saleTotal.toLocaleString("en-IN")}</span>
+
+              `;
+
+              }
+
+            }
+
+
+
+            /* ================= UPI PAYMENT ================= */
+
+
+
+            function payNow() {
+            const name = document.getElementById("customerName").value.trim();
+            const phone = document.getElementById("customerPhone").value.trim();
+            const address = document.getElementById("customerAddress").value.trim();
+
+            if (!name) {
+              alert("Please enter your name.");
+              return;
+            }
+
+            if (!phone) {
+              alert("Please enter your mobile number.");
+              return;
+            }
+
+            const cleanPhone = phone.replace(/\D/g, "");
+            if (cleanPhone.length < 10) {
+              alert("Please enter a valid mobile number.");
+              return;
+            }
+
+            if (!address) {
+              alert("Please enter your delivery address.");
+              return;
+            }
+
+            const total = productPrice * quantity;
+            const upiId = "BHARATPE2K0L0S756Q68218@unitype";
+            const merchantName = "Dragon Lamp";
+            const orderReference = "DL" + Date.now();
+
+            const params =
+              "?pa=" + encodeURIComponent(upiId) +
+              "&pn=" + encodeURIComponent(merchantName) +
+              "&am=" + encodeURIComponent(total.toFixed(2)) +
+              "&cu=INR" +
+              "&tr=" + encodeURIComponent(orderReference) +
+              "&tn=" + encodeURIComponent("Dragon Lamp Order");
+
+            const ua = navigator.userAgent || "";
+            const isAndroid = /Android/i.test(ua);
+            const isIOS = /iPhone|iPad|iPod/i.test(ua);
+
+            if (isAndroid) {
+              // Generic Android UPI intent. This lets Android show the installed
+              // UPI app flow instead of forcing a single app.
+              window.location.href = "upi://pay" + params;
+              return;
+            }
+
+            if (isIOS) {
+              openUPIChooser(params);
+              return;
+            }
+
+            alert("Please scan the UPI QR code with your UPI app.");
           }
-        }, 120);
 
-        thumbnailButtons.forEach((button) => {
-          button.classList.remove("active");
-        });
+          function openUPIChooser(params) {
+            const chooser = document.getElementById("upiAppChooser");
+            if (!chooser) {
+              alert("Please scan the UPI QR code with your UPI app.");
+              return;
+            }
 
-        if (clickedButton) {
-          clickedButton.classList.add("active");
-        }
-      }
-
-      thumbnailButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-          const imagePath = button.dataset.image;
-
-          if (!imagePath) return;
-
-          changeImage(imagePath, button);
-        });
-      });
-
-      if (mainImage) {
-        mainImage.style.transition = "opacity 0.18s ease";
-      }
-
-      /* ================= CHECKOUT ================= */
-
-      function openCheckout() {
-        document.getElementById("checkoutModal").classList.add("active");
-
-        document.body.style.overflow = "hidden";
-
-        updateTotal();
-      }
-
-      function closeCheckout() {
-        document.getElementById("checkoutModal").classList.remove("active");
-
-        document.body.style.overflow = "auto";
-      }
-
-      /* ================= QUANTITY ================= */
-
-      function changeQuantity(amount) {
-        quantity += amount;
-
-        if (quantity < 1) {
-          quantity = 1;
-        }
-
-        if (quantity > 10) {
-          quantity = 10;
-        }
-
-        document.getElementById("quantity").textContent = quantity;
-
-        updateTotal();
-      }
-
-      function updateTotal() {
-        const mrpTotal = productMRP * quantity;
-        const saleTotal = productPrice * quantity;
-        const totalPriceElement = document.getElementById("checkoutTotalPrice");
-
-        if (totalPriceElement) {
-          totalPriceElement.innerHTML = `
-          <span class="mrp-price">₹${mrpTotal.toLocaleString("en-IN")}</span>
-          <span class="sale-price">₹${saleTotal.toLocaleString("en-IN")}</span>
-        `;
-        }
-      }
-
-      /* ================= UPI PAYMENT ================= */
-
-      function payNow() {
-        const name = document.getElementById("customerName").value.trim();
-
-        const phone = document.getElementById("customerPhone").value.trim();
-
-        const address = document.getElementById("customerAddress").value.trim();
-
-        if (!name) {
-          alert("Please enter your name.");
-
-          return;
-        }
-
-        if (!phone) {
-          alert("Please enter your mobile number.");
-
-          return;
-        }
-
-        if (phone.length < 10) {
-          alert("Please enter a valid mobile number.");
-
-          return;
-        }
-
-        if (!address) {
-          alert("Please enter your delivery address.");
-
-          return;
-        }
-
-        const total = productPrice * quantity;
-
-        /*
-
-
-
-CHANGE YOUR UPI ID HERE
-
-
-
-*/
-
-        const upiId = "BHARATPE2K0L0S756Q68218@unitype";
-
-        const merchantName = "Dragon Lamp";
-
-        const orderReference = "DL" + Date.now();
-
-        const upiUrl =
-          "upi://pay" +
-          "?pa=" +
-          encodeURIComponent(upiId) +
-          "&pn=" +
-          encodeURIComponent(merchantName) +
-          "&am=" +
-          encodeURIComponent(total.toFixed(2)) +
-          "&cu=INR" +
-          "&tn=" +
-          encodeURIComponent("Dragon Lamp x" + quantity) +
-          "&tr=" +
-          encodeURIComponent(orderReference);
-
-        // Generic UPI intent:
-        // Android normally shows the installed UPI apps/chooser.
-        // iOS opens the UPI app that handles the upi:// scheme on that device.
-        window.location.href = upiUrl;
-      }
-
-      /* ================= MODAL ================= */
-
-      document
-
-        .getElementById("checkoutModal")
-
-        .addEventListener("click", function (event) {
-          if (event.target === this) {
-            closeCheckout();
+            chooser.dataset.upiParams = params;
+            chooser.classList.add("active");
+            chooser.setAttribute("aria-hidden", "false");
+            document.body.style.overflow = "hidden";
           }
-        });
 
-      /* ================= ESC ================= */
+          function launchUPIApp(scheme) {
+            const chooser = document.getElementById("upiAppChooser");
+            const params = chooser ? chooser.dataset.upiParams : "";
 
-      document.addEventListener("keydown", function (event) {
-        if (event.key === "Escape") {
-          closeCheckout();
-        }
-      });
+            if (!params) return;
 
-      updateTotal();
+            closeUPIChooser();
+
+            // Use an app-specific URL on iOS. A generic upi:// URL cannot
+            // reliably provide an app chooser in Safari.
+            window.location.href = scheme + params;
+          }
+
+          function closeUPIChooser() {
+            const chooser = document.getElementById("upiAppChooser");
+            if (!chooser) return;
+
+            chooser.classList.remove("active");
+            chooser.setAttribute("aria-hidden", "true");
+            document.body.style.overflow = "auto";
+          }
+
+          /* ================= MODAL ================= */
+
+
+
+            document
+
+
+
+              .getElementById("checkoutModal")
+
+
+
+              .addEventListener("click", function (event) {
+
+                if (event.target === this) {
+
+                  closeCheckout();
+
+                }
+
+              });
+
+
+
+            /* ================= ESC ================= */
+
+
+
+            document.addEventListener("keydown", function (event) {
+
+              if (event.key === "Escape") {
+
+                closeCheckout();
+
+              }
+
+            });
+
+
+
+            updateTotal();
     </script>
+
+    <!-- ================= UPI APP CHOOSER ================= -->
+    <div id="upiAppChooser" class="upi-app-chooser" aria-hidden="true">
+      <div class="upi-app-chooser-card">
+        <h3>Choose UPI App</h3>
+        <p>Select the app you want to use for this payment.</p>
+
+        <button
+          class="upi-app-option"
+          type="button"
+          onclick="launchUPIApp('gpay://upi/pay')"
+        >
+          Google Pay
+        </button>
+
+        <button
+          class="upi-app-option"
+          type="button"
+          onclick="launchUPIApp('phonepe://pay')"
+        >
+          PhonePe
+        </button>
+
+        <button
+          class="upi-app-option"
+          type="button"
+          onclick="launchUPIApp('paytmmp://pay')"
+        >
+          Paytm
+        </button>
+
+        <button
+          class="upi-app-cancel"
+          type="button"
+          onclick="closeUPIChooser()"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
   </body>
 </html>
