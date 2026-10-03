@@ -1777,6 +1777,21 @@
         }
       }
 
+      function createUPIUrl(scheme, amount) {
+    const upiId = "BHARATPE2K0L0S756Q68218@unitype";
+    const merchantName = "LAVPREET";
+    const transactionRef = "DL" + Date.now();
+
+    return (
+        scheme +
+        "?pa=" + upiId +
+        "&pn=" + encodeURIComponent(merchantName) +
+        "&am=" + Number(amount).toFixed(2) +
+        "&cu=INR" +
+        "&tr=" + transactionRef +
+        "&tn=" + encodeURIComponent("Dragon Lamp Order")
+    );
+}
       /* ================= UPI PAYMENT ================= */
 
 function payNow() {
@@ -1799,7 +1814,7 @@ function payNow() {
     const total = productPrice * quantity;
 
     const upiId = "BHARATPE2K0L0S756Q68218@unitype";
-    const merchantName = "Dragon Lamp";
+    const merchantName = "LAVPREET";
     const transactionRef = "DL" + Date.now();
 
     const query =
@@ -1818,14 +1833,21 @@ function payNow() {
     const isAndroid = /Android/i.test(userAgent);
 
     if (isIOS) {
-        openUPIChooser(query);
+        // openUPIChooser(query);
+        const upiUrl = createUPIUrl("upi://pay", total);
+console.log(upiUrl);
+window.location.href = upiUrl
         return;
     }
 
     if (isAndroid) {
         // Android: generic UPI intent.
         // Android can show/select available UPI apps.
-        window.location.href = "upi://pay" + query;
+        const upiUrl = createUPIUrl("upi://pay", total);
+console.log(upiUrl);
+window.location.href = upiUrl
+
+        // window.location.href = "upi://pay" + query;
         return;
     }
 
