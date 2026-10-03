@@ -1779,27 +1779,110 @@
 
       /* ================= UPI PAYMENT ================= */
 
-      function payNow() {
-    const name = document.getElementById("customerName").value.trim();
-    const phone = document.getElementById("customerPhone").value.trim();
-    const address = document.getElementById("customerAddress").value.trim();
+function payNow() {
+    const name = document.getElementById("customerName")?.value.trim();
+    const phone = document.getElementById("customerPhone")?.value.trim();
+    const address = document.getElementById("customerAddress")?.value.trim();
 
     if (!name || !phone || !address) {
         alert("Please fill all delivery details.");
         return;
     }
 
+    const cleanPhone = phone.replace(/\D/g, "");
+
+    if (cleanPhone.length !== 10) {
+        alert("Please enter a valid 10-digit mobile number.");
+        return;
+    }
+
     const total = productPrice * quantity;
 
     const upiId = "BHARATPE2K0L0S756Q68218@unitype";
-    const merchantName = "LAVPREET";
+    const merchantName = "Dragon Lamp";
     const transactionRef = "DL" + Date.now();
 
-    const upiUrl =
-    "upi://pay?pa=BHARATPE2K0L0S756Q68218@unitype&am=399&cu=INR";
+    const query =
+        "?pa=" + encodeURIComponent(upiId) +
+        "&pn=" + encodeURIComponent(merchantName) +
+        "&am=" + encodeURIComponent(total.toFixed(2)) +
+        "&cu=INR" +
+        "&tr=" + encodeURIComponent(transactionRef) +
+        "&tn=" + encodeURIComponent("Dragon Lamp Order");
+
+    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+    const isIOS = /iPad|iPhone|iPod/.test(userAgent) ||
+        (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+    const isAndroid = /Android/i.test(userAgent);
+
+    if (isIOS) {
+        openUPIChooser(query);
+        return;
+    }
+
+    if (isAndroid) {
+        // Android: generic UPI intent.
+        // Android can show/select available UPI apps.
+        window.location.href = "upi://pay" + query;
+        return;
+    }
+
+    // Desktop / unsupported device
+    alert("Please open this page on your mobile device to pay with UPI.");
+}
 
 
-    window.location.href = upiUrl;
+function openUPIChooser(query) {
+    const chooser = document.getElementById("upiAppChooser");
+
+    if (!chooser) {
+        // fallback
+        window.location.href = "upi://pay" + query;
+        return;
+    }
+
+    chooser.classList.add("show");
+    chooser.dataset.query = query;
+}
+
+
+function closeUPIChooser() {
+    const chooser = document.getElementById("upiAppChooser");
+
+    if (chooser) {
+        chooser.classList.remove("show");
+        delete chooser.dataset.query;
+    }
+}
+
+
+function launchUPIApp(app) {
+    const chooser = document.getElementById("upiAppChooser");
+
+    if (!chooser) return;
+
+    const query = chooser.dataset.query || "";
+
+    const schemes = {
+        gpay: "tez://upi/pay",
+        phonepe: "phonepe://pay",
+        paytm: "paytmmp://pay",
+        bhim: "bhim://upi/pay",
+        navi: "navi://pay",
+        amazon: "amazonpay://upi/pay",
+        cred: "credpay://upi/pay",
+        generic: "upi://pay"
+    };
+
+    const scheme = schemes[app];
+
+    if (!scheme) return;
+
+    closeUPIChooser();
+
+    window.location.href = scheme + query;
 }
 
       function openUPIChooser(params) {
