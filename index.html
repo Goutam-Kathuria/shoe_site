@@ -1653,12 +1653,9 @@
     </footer>
 
     <script>
+      /* ================= PRODUCT SETTINGS ================= */
 
-            /* ================= PRODUCT SETTINGS ================= */
-
-
-
-            /*
+      /*
 
 
 
@@ -1676,344 +1673,196 @@
 
       */
 
+      const productPrice = 399;
 
+      const productMRP = 999;
 
-            const productPrice = 399;
+      let quantity = 1;
 
+      /* ================= IMAGE GALLERY ================= */
 
+      const mainImage = document.getElementById("mainImage");
 
-            const productMRP = 999;
+      const thumbnailButtons = document.querySelectorAll(".thumbnail-btn");
 
+      function changeImage(imagePath, clickedButton = null) {
+        if (!mainImage || !imagePath) return;
 
+        mainImage.style.opacity = "0";
 
-            let quantity = 1;
+        setTimeout(() => {
+          mainImage.src = imagePath;
 
+          mainImage.onload = () => {
+            mainImage.style.opacity = "1";
+          };
 
+          if (mainImage.complete) {
+            mainImage.style.opacity = "1";
+          }
+        }, 120);
 
-            /* ================= IMAGE GALLERY ================= */
+        thumbnailButtons.forEach((button) => {
+          button.classList.remove("active");
+        });
 
+        if (clickedButton) {
+          clickedButton.classList.add("active");
+        }
+      }
 
+      thumbnailButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const imagePath = button.dataset.image;
 
-            const mainImage = document.getElementById("mainImage");
+          if (!imagePath) return;
 
+          changeImage(imagePath, button);
+        });
+      });
 
+      if (mainImage) {
+        mainImage.style.transition = "opacity 0.18s ease";
+      }
 
-            const thumbnailButtons = document.querySelectorAll(".thumbnail-btn");
+      /* ================= CHECKOUT ================= */
 
+      function openCheckout() {
+        document.getElementById("checkoutModal").classList.add("active");
 
+        document.body.style.overflow = "hidden";
 
-            function changeImage(imagePath, clickedButton = null) {
+        updateTotal();
+      }
 
-              if (!mainImage || !imagePath) return;
+      function closeCheckout() {
+        document.getElementById("checkoutModal").classList.remove("active");
 
+        document.body.style.overflow = "auto";
+      }
 
+      /* ================= QUANTITY ================= */
 
-              mainImage.style.opacity = "0";
+      function changeQuantity(amount) {
+        quantity += amount;
 
+        if (quantity < 1) {
+          quantity = 1;
+        }
 
+        if (quantity > 10) {
+          quantity = 10;
+        }
 
-              setTimeout(() => {
+        document.getElementById("quantity").textContent = quantity;
 
-                mainImage.src = imagePath;
+        updateTotal();
+      }
 
+      function updateTotal() {
+        const mrpTotal = productMRP * quantity;
 
+        const saleTotal = productPrice * quantity;
 
-                mainImage.onload = () => {
+        const totalPriceElement = document.getElementById("checkoutTotalPrice");
 
-                  mainImage.style.opacity = "1";
-
-                };
-
-
-
-                if (mainImage.complete) {
-
-                  mainImage.style.opacity = "1";
-
-                }
-
-              }, 120);
-
-
-
-              thumbnailButtons.forEach((button) => {
-
-                button.classList.remove("active");
-
-              });
-
-
-
-              if (clickedButton) {
-
-                clickedButton.classList.add("active");
-
-              }
-
-            }
-
-
-
-            thumbnailButtons.forEach((button) => {
-
-              button.addEventListener("click", () => {
-
-                const imagePath = button.dataset.image;
-
-
-
-                if (!imagePath) return;
-
-
-
-                changeImage(imagePath, button);
-
-              });
-
-            });
-
-
-
-            if (mainImage) {
-
-              mainImage.style.transition = "opacity 0.18s ease";
-
-            }
-
-
-
-            /* ================= CHECKOUT ================= */
-
-
-
-            function openCheckout() {
-
-              document.getElementById("checkoutModal").classList.add("active");
-
-
-
-              document.body.style.overflow = "hidden";
-
-
-
-              updateTotal();
-
-            }
-
-
-
-            function closeCheckout() {
-
-              document.getElementById("checkoutModal").classList.remove("active");
-
-
-
-              document.body.style.overflow = "auto";
-
-            }
-
-
-
-            /* ================= QUANTITY ================= */
-
-
-
-            function changeQuantity(amount) {
-
-              quantity += amount;
-
-
-
-              if (quantity < 1) {
-
-                quantity = 1;
-
-              }
-
-
-
-              if (quantity > 10) {
-
-                quantity = 10;
-
-              }
-
-
-
-              document.getElementById("quantity").textContent = quantity;
-
-
-
-              updateTotal();
-
-            }
-
-
-
-            function updateTotal() {
-
-              const mrpTotal = productMRP * quantity;
-
-              const saleTotal = productPrice * quantity;
-
-              const totalPriceElement = document.getElementById("checkoutTotalPrice");
-
-
-
-              if (totalPriceElement) {
-
-                totalPriceElement.innerHTML = `
+        if (totalPriceElement) {
+          totalPriceElement.innerHTML = `
 
                 <span class="mrp-price">₹${mrpTotal.toLocaleString("en-IN")}</span>
 
                 <span class="sale-price">₹${saleTotal.toLocaleString("en-IN")}</span>
 
               `;
+        }
+      }
 
-              }
+      /* ================= UPI PAYMENT ================= */
 
-            }
+      function payNow() {
+    const name = document.getElementById("customerName").value.trim();
+    const phone = document.getElementById("customerPhone").value.trim();
+    const address = document.getElementById("customerAddress").value.trim();
 
+    if (!name || !phone || !address) {
+        alert("Please fill all delivery details.");
+        return;
+    }
 
+    const total = productPrice * quantity;
 
-            /* ================= UPI PAYMENT ================= */
+    const upiId = "BHARATPE2K0L0S756Q68218@unitype";
+    const merchantName = "Dragon Lamp";
+    const transactionRef = "DL" + Date.now();
 
+    const upiUrl =
+        "upi://pay" +
+        "?pa=" + encodeURIComponent(upiId) +
+        "&pn=" + encodeURIComponent(merchantName) +
+        "&am=" + encodeURIComponent(total.toFixed(2)) +
+        "&cu=INR" +
+        "&tr=" + encodeURIComponent(transactionRef) +
+        "&tn=" + encodeURIComponent("Dragon Lamp Order");
 
+    window.location.href = upiUrl;
+}
 
-            function payNow() {
-            const name = document.getElementById("customerName").value.trim();
-            const phone = document.getElementById("customerPhone").value.trim();
-            const address = document.getElementById("customerAddress").value.trim();
+      function openUPIChooser(params) {
+        const chooser = document.getElementById("upiAppChooser");
+        if (!chooser) {
+          alert("Please scan the UPI QR code with your UPI app.");
+          return;
+        }
 
-            if (!name) {
-              alert("Please enter your name.");
-              return;
-            }
+        chooser.dataset.upiParams = params;
+        chooser.classList.add("active");
+        chooser.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+      }
 
-            if (!phone) {
-              alert("Please enter your mobile number.");
-              return;
-            }
+      function launchUPIApp(scheme) {
+        const chooser = document.getElementById("upiAppChooser");
+        const params = chooser ? chooser.dataset.upiParams : "";
 
-            const cleanPhone = phone.replace(/\D/g, "");
-            if (cleanPhone.length < 10) {
-              alert("Please enter a valid mobile number.");
-              return;
-            }
+        if (!params) return;
 
-            if (!address) {
-              alert("Please enter your delivery address.");
-              return;
-            }
+        closeUPIChooser();
 
-            const total = productPrice * quantity;
-            const upiId = "BHARATPE2K0L0S756Q68218@unitype";
-            const merchantName = "Dragon Lamp";
-            const orderReference = "DL" + Date.now();
+        // Use an app-specific URL on iOS. A generic upi:// URL cannot
+        // reliably provide an app chooser in Safari.
+        window.location.href = scheme + params;
+      }
 
-            const params =
-              "?pa=" + encodeURIComponent(upiId) +
-              "&pn=" + encodeURIComponent(merchantName) +
-              "&am=" + encodeURIComponent(total.toFixed(2)) +
-              "&cu=INR" +
-              "&tr=" + encodeURIComponent(orderReference) +
-              "&tn=" + encodeURIComponent("Dragon Lamp Order");
+      function closeUPIChooser() {
+        const chooser = document.getElementById("upiAppChooser");
+        if (!chooser) return;
 
-            const ua = navigator.userAgent || "";
-            const isAndroid = /Android/i.test(ua);
-            const isIOS = /iPhone|iPad|iPod/i.test(ua);
+        chooser.classList.remove("active");
+        chooser.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "auto";
+      }
 
-            if (isAndroid) {
-              // Generic Android UPI intent. This lets Android show the installed
-              // UPI app flow instead of forcing a single app.
-              window.location.href = "upi://pay" + params;
-              return;
-            }
+      /* ================= MODAL ================= */
 
-            if (isIOS) {
-              openUPIChooser(params);
-              return;
-            }
+      document
 
-            alert("Please scan the UPI QR code with your UPI app.");
+        .getElementById("checkoutModal")
+
+        .addEventListener("click", function (event) {
+          if (event.target === this) {
+            closeCheckout();
           }
+        });
 
-          function openUPIChooser(params) {
-            const chooser = document.getElementById("upiAppChooser");
-            if (!chooser) {
-              alert("Please scan the UPI QR code with your UPI app.");
-              return;
-            }
+      /* ================= ESC ================= */
 
-            chooser.dataset.upiParams = params;
-            chooser.classList.add("active");
-            chooser.setAttribute("aria-hidden", "false");
-            document.body.style.overflow = "hidden";
-          }
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") {
+          closeCheckout();
+        }
+      });
 
-          function launchUPIApp(scheme) {
-            const chooser = document.getElementById("upiAppChooser");
-            const params = chooser ? chooser.dataset.upiParams : "";
-
-            if (!params) return;
-
-            closeUPIChooser();
-
-            // Use an app-specific URL on iOS. A generic upi:// URL cannot
-            // reliably provide an app chooser in Safari.
-            window.location.href = scheme + params;
-          }
-
-          function closeUPIChooser() {
-            const chooser = document.getElementById("upiAppChooser");
-            if (!chooser) return;
-
-            chooser.classList.remove("active");
-            chooser.setAttribute("aria-hidden", "true");
-            document.body.style.overflow = "auto";
-          }
-
-          /* ================= MODAL ================= */
-
-
-
-            document
-
-
-
-              .getElementById("checkoutModal")
-
-
-
-              .addEventListener("click", function (event) {
-
-                if (event.target === this) {
-
-                  closeCheckout();
-
-                }
-
-              });
-
-
-
-            /* ================= ESC ================= */
-
-
-
-            document.addEventListener("keydown", function (event) {
-
-              if (event.key === "Escape") {
-
-                closeCheckout();
-
-              }
-
-            });
-
-
-
-            updateTotal();
+      updateTotal();
     </script>
 
     <!-- ================= UPI APP CHOOSER ================= -->
