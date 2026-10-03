@@ -1796,13 +1796,8 @@
     const transactionRef = "DL" + Date.now();
 
     const upiUrl =
-        "upi://pay" +
-        "?pa=" + encodeURIComponent(upiId) +
-        "&pn=" + encodeURIComponent(merchantName) +
-        "&am=" + encodeURIComponent(total.toFixed(2)) +
-        "&cu=INR" +
-        "&tr=" + encodeURIComponent(transactionRef) +
-        "&tn=" + encodeURIComponent("Dragon Lamp Order");
+    "upi://pay?pa=BHARATPE2K0L0S756Q68218@unitype&am=399&cu=INR";
+
 
     window.location.href = upiUrl;
 }
